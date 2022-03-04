@@ -10,7 +10,7 @@
 
     <groupId>it.cnr.si</groupId>
     <artifactId>rest-client-sigla-feign</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -20,7 +20,7 @@
     <scm>
         <connection>scm:git:ssh://git@git.si.cnr.it/dev/rest-client-sigla-feign.git</connection>
         <developerConnection>scm:git:ssh://git@git.si.cnr.it/dev/rest-client-sigla-feign.git</developerConnection>
-        <tag>0.0.1</tag>
+        <tag>0.0.2</tag>
     </scm>
 
     <dependencies>
