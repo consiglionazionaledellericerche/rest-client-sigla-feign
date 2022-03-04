@@ -8,9 +8,8 @@ stages:
 
 variables:
   MAVEN_OPTS: "-Djava.awt.headless=true -Dsonar.host.url=$SONAR_HOST_URL"
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=./.m2/repository -Pprod,maven-central -Dnexus.url=$NEXUS_URL -Dnexus.login=$NEXUS_USERNAME -Dnexus.pwd=$NEXUS_PASSWORD -Dsigla.username=$SIGLA_USERNAME -Dsigla.password=$SIGLA_PASSWORD -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version"
-  CONTAINER_TEST_IMAGE: $CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
-  CONTAINER_RELEASE_IMAGE: $CI_PROJECT_PATH:latest
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=./.m2/repository -Dnexus.url=$NEXUS_URL -Dnexus.login=$NEXUS_USERNAME -Dnexus.pwd=$NEXUS_PASSWORD -Dsigla.username=$SIGLA_USERNAME -Dsigla.password=$SIGLA_PASSWORD -Djava.awt.headless=true --batch-mode --errors --fail-at-end --show-version"
+  MAVEN_CLI_CENTRAL_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=./.m2/repository -Pprod,maven-central -Dnexus.url=$NEXUS_URL -Dsonatype.login=$SONATYPE_USERNAME -Dsonatype.pwd=$SONATYPE_PASSWORD -DskipTests --batch-mode --errors --fail-at-end --show-version"
 
 cache:
   paths:
@@ -54,8 +53,8 @@ perform-maven-release:
     - git config --global user.email "marco.spasiano@cnr.it"
     - git config --global user.name "marco.spasiano"
     - git checkout -B "$CI_BUILD_REF_NAME"
-    - mvn $MAVEN_CLI_OPTS release:clean release:prepare -DreleaseVersion=$MAVEN_RELEASE_VERSION -Darguments="-DskipTests" -Dresume=false -B
-    - mvn $MAVEN_CLI_OPTS release:perform -Darguments="-DskipTests" -Dresume=false -B
+    - mvn release:clean release:prepare -DreleaseVersion=$MAVEN_RELEASE_VERSION -Darguments="-DskipTests" -Dresume=false -B $MAVEN_CLI_CENTRAL_OPTS
+    - mvn release:perform -Darguments="-DskipTests" -Dresume=false -B $MAVEN_CLI_CENTRAL_OPTS
   only:
     variables:
       - $CI_COMMIT_MESSAGE !~ /prepare release/ && $CI_COMMIT_MESSAGE !~ /prepare for next development iteration/
