@@ -9,13 +9,7 @@ public class AuthenticationOnlyErrorDecoder implements ErrorDecoder {
 
     public Exception decode(String methodKey, Response response) {
         if (response.status() == 401) {
-            throw new RetryableAuthenticationException(
-                    401,
-                    "Authentication expired",
-                    null,
-                    null,
-                    null
-            );
+            throw new RuntimeException("Access denied!");
         } else {
             return inner.decode(methodKey, response);
         }
