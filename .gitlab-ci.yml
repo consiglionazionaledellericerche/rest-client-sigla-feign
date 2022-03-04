@@ -50,7 +50,6 @@ perform-maven-release:
     # Install ssh-agent if not already installed, it is required by Docker.
     # (change apt-get to yum if you use a CentOS-based image)
     - 'which ssh-agent || ( apk add --update openssh-client && rm -rf /var/cache/apk/*)'
-    - 'which nodejs || (apk add --update nodejs nodejs-npm && rm -rf /var/cache/apk/*)'
     # Run ssh-agent (inside the build environment)
     - eval $(ssh-agent -s)
 
@@ -73,8 +72,8 @@ perform-maven-release:
     - echo "pinentry-mode loopback" > /root/.gnupg/gpg.conf
     - echo "allow-loopback-pinentry" > /root/.gnupg/gpg-agent.conf
     - gpg --batch --import <(echo "$GPG_PRIVATE_KEY")
-    - mvn release:clean release:prepare -DreleaseVersion=$MAVEN_RELEASE_VERSION -Darguments="-DskipTests" -Dresume=false -B $MAVEN_CLI_CENTRAL_OPTS
-    - mvn release:perform -Darguments="-DskipTests" -Dresume=false -B $MAVEN_CLI_CENTRAL_OPTS
+    - mvn release:clean release:prepare -DreleaseVersion=$MAVEN_RELEASE_VERSION -Darguments="-Dgpg.passphrase=$GPG_PASSPHRASE -DskipTests" -Dresume=false -B $MAVEN_CLI_CENTRAL_OPTS
+    - mvn release:perform -Darguments="-Dgpg.passphrase=$GPG_PASSPHRASE -DskipTests" -Dresume=false -B $MAVEN_CLI_CENTRAL_OPTS
   only:
     variables:
       - $CI_COMMIT_MESSAGE !~ /prepare release/ && $CI_COMMIT_MESSAGE !~ /prepare for next development iteration/
