@@ -44,15 +44,29 @@ maven-install:
 #la release è opzionale e manuale.
 perform-maven-release:
   stage: release
-  image: maven:3-jdk-8
+  image: maven:alpine
   script:
-    - eval `ssh-agent -s`
+    - 'which git || (apk add --update git && rm -rf /var/cache/apk/*)'
+    # Install ssh-agent if not already installed, it is required by Docker.
+    # (change apt-get to yum if you use a CentOS-based image)
+    - 'which ssh-agent || ( apk add --update openssh-client && rm -rf /var/cache/apk/*)'
+    - 'which nodejs || (apk add --update nodejs nodejs-npm && rm -rf /var/cache/apk/*)'
+    # Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+
+    # Add the SSH key stored in GIT_SSH_PRIV_KEY variable to the agent store
     - ssh-add <(echo "$GIT_SSH_PRIV_KEY")
+
+    # For Docker builds disable host key checking. Be aware that by adding that
+    # you are susceptible to man-in-the-middle attacks.
+    # WARNING: Use this only with the Docker executor, if you use it with shell
+    # you will overwrite your user's SSH config.
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - git config --global user.email "marco.spasiano@cnr.it"
     - git config --global user.name "marco.spasiano"
     - git checkout -B "$CI_BUILD_REF_NAME"
+
     # Add gpg private key
     - 'which gnupg || ( apk add --update gnupg && rm -rf /var/cache/apk/*)'
     - gpg -v --list-keys
