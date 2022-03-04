@@ -26,7 +26,7 @@ public class FatturaAttivaTest {
         fatturaAttivaDTO.setTi_causale_emissione("C");
         fatturaAttivaDTO.setTi_bene_servizio("B");
         fatturaAttivaDTO.setTi_fattura("F");
-        fatturaAttivaDTO.setDt_registrazione(LocalDateTime.now());
+        fatturaAttivaDTO.setDt_registrazione(LocalDateTime.now().plusMonths(1));
         fatturaAttivaDTO.setFl_intra_ue(Boolean.TRUE);
         fatturaAttivaDTO.setFl_liquidazione_differita(Boolean.FALSE);
         fatturaAttivaDTO.setCd_terzo(34791);
