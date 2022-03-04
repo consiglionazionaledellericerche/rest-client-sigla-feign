@@ -4,7 +4,6 @@ services:
 
 stages:
   - deploy
-  - build
   - release
 
 variables:
@@ -42,33 +41,6 @@ maven-install:
   except:
     - master
     - tags
-
-#Ad ogni nuovo commit sul master viene fatta la push sul docker registry locale.
-docker-build-push-master:
-  stage: build
-  script:
-    - docker build -t $CONTAINER_TEST_IMAGE .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker tag $CONTAINER_TEST_IMAGE $CI_REGISTRY/$CONTAINER_RELEASE_IMAGE
-    - docker push $CI_REGISTRY/$CONTAINER_RELEASE_IMAGE
-  only:
-    variables:
-      - $CI_COMMIT_MESSAGE !~ /prepare release/ && $CI_COMMIT_MESSAGE !~ /prepare for next development iteration/
-    refs:
-      - master
-
-
-#Ad ogni nuovo commit sul branch viene fatta la push sul docker registry locale.
-docker-build-push-branches:
-  stage: build
-  script:
-    - docker build -t $CONTAINER_TEST_IMAGE .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker tag $CONTAINER_TEST_IMAGE $CI_REGISTRY/$CONTAINER_TEST_IMAGE
-    - docker push $CI_REGISTRY/$CONTAINER_TEST_IMAGE
-  except:
-    - tags
-    - master
 
 #la release è opzionale e manuale.
 perform-maven-release:
