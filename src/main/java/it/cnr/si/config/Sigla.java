@@ -10,16 +10,16 @@ import java.util.List;
 @Headers({"Content-Type: application/json"})
 public interface Sigla {
 
-    @RequestLine("GET /fatturaattiva?pg={pg}")
-    FatturaAttivaDTO getFatturaByProgressivo(@Param("pg") long pg);
+    @RequestLine("GET /fatturaattiva?esercizio={esercizio}&pg={pg}")
+    FatturaAttivaDTO getFatturaByProgressivo(@Param("esercizio") Integer esercizio, @Param("pg") Long pg);
 
     @RequestLine("POST /fatturaattiva")
     List<FatturaAttivaDTO> inserisciFatture(List<FatturaAttivaDTO> fatture);
 
-    @RequestLine("POST /fatturaattiva/inserisciDatiPerStampa?pg={pg}")
-    Long inserisciDatiPerStampa(@Param("pg") long pg);
+    @RequestLine("POST /fatturaattiva/inserisciDatiPerStampa?esercizio={esercizio}&pg={pg}")
+    Long inserisciDatiPerStampa(@Param("esercizio") Integer esercizio, @Param("pg") Long pg);
 
     @RequestLine("GET /fatturaattiva/print?pgStampa={pgStampa}")
-    byte[] stampaFattura(@Param("pgStampa") long pgStampa);
+    byte[] stampaFattura(@Param("pgStampa") Long pgStampa);
 
 }

@@ -53,22 +53,38 @@ public class FatturaAttivaTest {
         final List<FatturaAttivaDTO> fatturaAttivaDTOList = siglaService.inserisciFatture(Arrays.asList(fatturaAttivaDTO));
         Assert.assertEquals(1, fatturaAttivaDTOList.size());
         final Long pgFatturaAttiva = fatturaAttivaDTOList.stream().map(FatturaAttivaDTO::getPg_fattura_attiva).findAny().orElse(null);
-        final FatturaAttivaDTO fatturaByProgressivo = siglaService.getFatturaByProgressivo(pgFatturaAttiva);
+        final FatturaAttivaDTO fatturaByProgressivo = siglaService.getFatturaByProgressivo(2022, pgFatturaAttiva);
         Assert.assertEquals(Integer.valueOf(34791), fatturaByProgressivo.getCd_terzo());
 
     }
 
     @Test
-    public void stampaFattura() throws IOException {
+    public void stampaFattura2022() throws IOException {
         SiglaService siglaService = new SiglaService();
 
-        final Long pgStampa = siglaService.inserisciDatiPerStampa(Long.valueOf(7));
+        final Long pgStampa = siglaService.inserisciDatiPerStampa(2022, Long.valueOf(7));
         Assert.assertNotNull(pgStampa);
 
         final byte[] bytes = siglaService.stampaFattura(pgStampa);
         Assert.assertNotNull(bytes);
 
-        try (FileOutputStream stream = new FileOutputStream("stampa.pdf")) {
+        try (FileOutputStream stream = new FileOutputStream("fattura-2022-7.pdf")) {
+            stream.write(bytes);
+        }
+
+    }
+
+    @Test
+    public void stampaFattura2021() throws IOException {
+        SiglaService siglaService = new SiglaService();
+
+        final Long pgStampa = siglaService.inserisciDatiPerStampa(2021, Long.valueOf(21));
+        Assert.assertNotNull(pgStampa);
+
+        final byte[] bytes = siglaService.stampaFattura(pgStampa);
+        Assert.assertNotNull(bytes);
+
+        try (FileOutputStream stream = new FileOutputStream("fattura-2021-21.pdf")) {
             stream.write(bytes);
         }
 

@@ -14,9 +14,6 @@ public class BasicRequestInterceptor implements RequestInterceptor {
     private final String username = PropertiesService.getProp("sigla.username");
     private final String password = PropertiesService.getProp("sigla.password");
 
-    private final String esercizio = Optional.ofNullable(
-            PropertiesService.getProp("sigla.esercizio")
-    ).filter(s -> !s.isEmpty()).orElse(String.valueOf(LocalDateTime.now().getYear()));
     private final String cds = PropertiesService.getProp("sigla.cds");
     private final String uo = PropertiesService.getProp("sigla.uo");
     private final String cdr = PropertiesService.getProp("sigla.cdr");
@@ -30,7 +27,6 @@ public class BasicRequestInterceptor implements RequestInterceptor {
                 "Basic " + Base64.getEncoder().encodeToString(
                         username.concat(":").concat(password).getBytes(StandardCharsets.UTF_8))
         );
-        requestTemplate.header("X-sigla-esercizio", esercizio);
         requestTemplate.header("X-sigla-cd-cds", cds);
         requestTemplate.header("X-sigla-cd-unita-organizzativa", uo);
         requestTemplate.header("X-sigla-cd-cdr", cdr);

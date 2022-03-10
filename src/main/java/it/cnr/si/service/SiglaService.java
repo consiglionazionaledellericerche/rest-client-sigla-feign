@@ -59,16 +59,16 @@ public class SiglaService {
 
     }
 
-    public FatturaAttivaDTO getFatturaByProgressivo(Long pg) {
-        return sigla.getFatturaByProgressivo(pg);
+    public FatturaAttivaDTO getFatturaByProgressivo(Integer esercizio, Long pg) {
+        return sigla.getFatturaByProgressivo(esercizio, pg);
     }
 
     public List<FatturaAttivaDTO> inserisciFatture(List<FatturaAttivaDTO> fatture) {
         return sigla.inserisciFatture(fatture);
     }
 
-    public Long inserisciDatiPerStampa(Long pgFattura) {
-        return sigla.inserisciDatiPerStampa(pgFattura);
+    public Long inserisciDatiPerStampa(Integer esercizio, Long pgFattura) {
+        return sigla.inserisciDatiPerStampa(esercizio, pgFattura);
     }
 
     public byte[] stampaFattura(Long pgStampa) {
